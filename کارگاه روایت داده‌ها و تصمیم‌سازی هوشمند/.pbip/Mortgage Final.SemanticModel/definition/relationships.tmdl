@@ -1,0 +1,25 @@
+relationship 5313b405-ab65-4706-9d64-5d2e97fe66f2
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DimApplicants.DateOfBirth
+	toColumn: LocalDateTable_40f6f1b5-80b2-4713-ab1c-87ece6f1c12c.Date
+
+relationship AutoDetected_b55b6c13-f55a-467a-bb18-efa5c92d8285
+	fromColumn: FactApplications.PropertyID
+	toColumn: DimProperties.PropertyID
+
+relationship AutoDetected_1b3f81fc-acd7-4f9d-983f-d3844aa7b342
+	fromColumn: FactApplications.ProductID
+	toColumn: DimProducts.ProductID
+
+relationship AutoDetected_905f9c7e-2440-4083-a426-256b7eda1a0f
+	fromColumn: FactApplications.UnderwriterID
+	toColumn: DimUnderwriters.UnderwriterID
+
+relationship f630e653-e28c-e819-a9cf-3690910a0dbc
+	fromColumn: FactApplications.ApplicantID
+	toColumn: DimApplicants.ApplicantID
+
+relationship ae451350-9378-f58e-4bc1-dc8c86da6cf2
+	fromColumn: FactApplications.ApplicationDate
+	toColumn: DimDate.Date
+

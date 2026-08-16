@@ -1,0 +1,47 @@
+table DimUnderwriters
+	lineageTag: 31f8d51e-361b-4080-ac17-aae3262e19b5
+
+	column UnderwriterID
+		dataType: int64
+		formatString: 0
+		lineageTag: d4a42cab-93ef-4184-8dde-5cb1f114f6b7
+		summarizeBy: none
+		sourceColumn: UnderwriterID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Name
+		dataType: string
+		lineageTag: bd7956b5-9662-4678-8a6a-4b2d4ed86e48
+		summarizeBy: none
+		sourceColumn: Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column Department
+		dataType: string
+		lineageTag: 1a5fe0b2-b6a4-4354-9742-a22820b9f8b7
+		summarizeBy: none
+		sourceColumn: Department
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimUnderwriters = m
+		mode: import
+		source =
+				let
+				  Source = Excel.Workbook(File.Contents("C:\Users\Abbas\Desktop\انجام پروژه\هفته 5\تسک دوم\7534502097409023744_8368102520896\sources\Underwriters.xlsx"), null, true),
+				  #"Navigation 1" = Source{[Item = "Sheet1", Kind = "Sheet"]}[Data],
+				  #"Promoted headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars = true]),
+				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"UnderwriterID", Int64.Type}, {"Name", type text}, {"Department", type text}}),
+				    #"Trimmed Text" = Table.TransformColumns(#"Changed column type",{{"Name", Text.Trim, type text}}),
+				    #"Cleaned Text" = Table.TransformColumns(#"Trimmed Text",{{"Name", Text.Clean, type text}}),
+				    #"Trimmed Text1" = Table.TransformColumns(#"Cleaned Text",{{"Department", Text.Trim, type text}}),
+				    #"Cleaned Text1" = Table.TransformColumns(#"Trimmed Text1",{{"Department", Text.Clean, type text}})
+				in
+				  #"Cleaned Text1"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,149 @@
+table DimApplicants
+	lineageTag: 8cb6c0b1-fa81-4fb5-9144-3ae7e1b9e36c
+
+	column ApplicantID
+		dataType: int64
+		formatString: 0
+		lineageTag: 8cbd88ac-c2ac-4e5a-9940-1231cace8d35
+		summarizeBy: none
+		sourceColumn: ApplicantID
+
+		annotation SummarizationSetBy = Automatic
+
+	column FirstName
+		dataType: string
+		lineageTag: 94cd5a68-095e-4992-8d38-334c8b2c2ff2
+		summarizeBy: none
+		sourceColumn: FirstName
+
+		annotation SummarizationSetBy = Automatic
+
+	column LastName
+		dataType: string
+		lineageTag: 68a4f0bc-bf1f-40fd-9837-0de5f948bb51
+		summarizeBy: none
+		sourceColumn: LastName
+
+		annotation SummarizationSetBy = Automatic
+
+	column FullName
+		dataType: string
+		lineageTag: 4a184981-8bf4-4491-a9b8-be2afe12016f
+		summarizeBy: none
+		sourceColumn: FullName
+
+		annotation SummarizationSetBy = Automatic
+
+	column Email
+		dataType: string
+		lineageTag: e2267668-6483-48b2-ba46-ffe98997bae4
+		summarizeBy: none
+		sourceColumn: Email
+
+		annotation SummarizationSetBy = Automatic
+
+	column DateOfBirth
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 2880e566-d448-49b3-8ecd-7f6e33824e02
+		summarizeBy: none
+		sourceColumn: DateOfBirth
+
+		variation Variation
+			isDefault
+			relationship: 5313b405-ab65-4706-9d64-5d2e97fe66f2
+			defaultHierarchy: LocalDateTable_40f6f1b5-80b2-4713-ab1c-87ece6f1c12c.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'CreditHistory.CreditScore'
+		dataType: int64
+		formatString: 0
+		lineageTag: 5eb25333-1e8d-4536-b402-168ec07113ac
+		summarizeBy: sum
+		sourceColumn: CreditHistory.CreditScore
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'CreditHistory.Bankruptcy'
+		dataType: int64
+		formatString: 0
+		lineageTag: 190c9405-898c-40e7-ab4e-9a1e76a71db3
+		summarizeBy: sum
+		sourceColumn: CreditHistory.Bankruptcy
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'CreditHistory.LatePayments'
+		dataType: int64
+		formatString: 0
+		lineageTag: abdf0ad7-c9a3-4f49-b92a-bda06275bd51
+		summarizeBy: sum
+		sourceColumn: CreditHistory.LatePayments
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Credit Band' = ```
+			
+			VAR Score = DimApplicants[CreditHistory.CreditScore]
+			RETURN
+			    SWITCH (
+			        TRUE (),
+			        ISBLANK ( Score ), "No Score",
+			        Score < 600, "Poor",
+			        Score < 650, "Fair",
+			        Score < 700, "Good",
+			        Score < 750, "Very Good",
+			        "Excellent"
+			    )
+			
+			
+			
+			
+			```
+		lineageTag: d470b78b-2191-40f1-a8a9-7c56d3eed6cc
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Bankruptcy Label' =
+			
+			SWITCH (
+			TRUE (),
+			DimApplicants[CreditHistory.Bankruptcy] = 0, "No Bankruptcy",
+			DimApplicants[CreditHistory.Bankruptcy] = 1, "Bankruptcy",
+			"Other"
+			)
+		lineageTag: 65375c53-73d2-464c-ac26-b41943973ce3
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimApplicants = m
+		mode: import
+		source =
+				let
+				  Source = Excel.Workbook(File.Contents("C:\Users\Abbas\Desktop\انجام پروژه\هفته 5\تسک دوم\7534502097409023744_8368102520896\sources\Applicants.xlsx"), null, true),
+				  #"Navigation 1" = Source{[Item = "Sheet1", Kind = "Sheet"]}[Data],
+				  #"Promoted headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars = true]),
+				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers",{{"ApplicantID", Int64.Type}, {"FirstName", type text}, {"LastName", type text}, {"Email", type text}, {"DateOfBirth", type date}}),
+				    #"Trimmed Text" = Table.TransformColumns(#"Changed column type",{{"FirstName", Text.Trim, type text}}),
+				    #"Cleaned Text" = Table.TransformColumns(#"Trimmed Text",{{"FirstName", Text.Clean, type text}}),
+				    #"Trimmed Text1" = Table.TransformColumns(#"Cleaned Text",{{"LastName", Text.Trim, type text}}),
+				    #"Cleaned Text1" = Table.TransformColumns(#"Trimmed Text1",{{"LastName", Text.Clean, type text}}),
+				    #"Trimmed Text2" = Table.TransformColumns(#"Cleaned Text1",{{"Email", Text.Trim, type text}}),
+				    #"Cleaned Text2" = Table.TransformColumns(#"Trimmed Text2",{{"Email", Text.Clean, type text}}),
+				    #"Inserted Merged Column" = Table.AddColumn(#"Cleaned Text2", "FullName", each Text.Combine({[FirstName], [LastName]}, " "), type text),
+				    #"Merged Queries" = Table.NestedJoin(#"Inserted Merged Column", {"ApplicantID"}, CreditHistory, {"ApplicantID"}, "CreditHistory", JoinKind.LeftOuter),
+				    #"Expanded CreditHistory" = Table.ExpandTableColumn(#"Merged Queries", "CreditHistory", {"CreditScore", "Bankruptcy", "LatePayments"}, {"CreditHistory.CreditScore", "CreditHistory.Bankruptcy", "CreditHistory.LatePayments"}),
+				    #"Kept Duplicates" = let columnNames = {"Email"}, addCount = Table.Group(#"Expanded CreditHistory", columnNames, {{"Count", Table.RowCount, type number}}), selectDuplicates = Table.SelectRows(addCount, each [Count] > 1), removeCount = Table.RemoveColumns(selectDuplicates, "Count") in Table.Join(#"Expanded CreditHistory", columnNames, removeCount, columnNames, JoinKind.Inner),
+				    #"Reordered Columns" = Table.ReorderColumns(#"Kept Duplicates",{"ApplicantID", "FirstName", "LastName", "FullName", "Email", "DateOfBirth", "CreditHistory.CreditScore", "CreditHistory.Bankruptcy", "CreditHistory.LatePayments"})
+				in
+				    #"Reordered Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

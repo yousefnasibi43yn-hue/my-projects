@@ -1,0 +1,111 @@
+table 'table Measure'
+	lineageTag: 2fd14ba5-bec0-4636-8db8-a22aa4f323b5
+
+	measure 'Total Applications' = COUNTROWS(FactApplications)
+		formatString: 0
+		lineageTag: 4b6fa6ef-3fa1-4e44-b6ef-60a006add367
+
+	measure 'Unique Applicants' = DISTINCTCOUNT(FactApplications[ApplicantID])
+		formatString: 0
+		lineageTag: ba4af325-2bca-42f3-be25-417844ebc248
+
+	measure 'Total Requested Amount' = SUM(FactApplications[LoanAmount])
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: 077fa9c7-39b0-4a61-9a38-23c38e0150e8
+
+	measure 'Average Loan Amount' = ```
+			AVERAGE(FactApplications[LoanAmount]) 
+			```
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: 0771c8d1-8e91-484e-945f-c623959a628d
+
+	measure 'Approved Applications' = CALCULATE([Total Applications],FactApplications[Status] = "Approved")
+		formatString: 0
+		lineageTag: ff939002-6f4d-4bcd-8028-7aa718ac8e0f
+
+	measure 'Rejected Applications' = CALCULATE([Total Applications],FactApplications[Status] = "Rejected")
+		formatString: 0
+		lineageTag: d4903020-7dc7-4867-9792-4ee31ca0cb8b
+
+	measure 'Pending Applications' = CALCULATE([Total Applications],FactApplications[Status] = "Pending")
+		formatString: 0
+		lineageTag: 6da89900-a2b8-4eaf-82ca-ac160b131da0
+
+	measure 'Decided Applications' = [Approved Applications] + [Rejected Applications]
+		formatString: 0
+		lineageTag: 77a41345-50c6-4877-8092-fa88651d0fc2
+
+	measure 'Approval Rate' = DIVIDE([Approved Applications],[Decided Applications])
+		formatString: 0%;-0%;0%
+		lineageTag: 6e979524-2e95-4b34-a8ec-06edda342e5e
+
+	measure 'Rejection Rate' = DIVIDE([Rejected Applications],[Decided Applications])
+		formatString: 0%;-0%;0%
+		lineageTag: 469863c2-a2cc-4a80-9b25-81019bc864f3
+
+	measure 'Pending Rate' = DIVIDE([Pending Applications],[Total Applications])
+		formatString: 0%;-0%;0%
+		lineageTag: 67e0f767-91cd-4ae0-9faf-c6d4a47b69a5
+
+	measure 'Approved Loan Amount' = CALCULATE([Total Requested Amount],FactApplications[Status] = "Approved")
+		lineageTag: 2d09f3a2-bbe3-4ba3-900a-17a59c89817d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Rejected Loan Amount' = CALCULATE([Total Requested Amount],FactApplications[Status] = "Rejected")
+		lineageTag: 8fa3947b-d948-4b2c-882c-b5cdac758aa2
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Average LTV' = AVERAGE(FactApplications[LTV])
+		formatString: 0%;-0%;0%
+		lineageTag: 23c1d84b-193a-4316-ac6e-de2218b281dc
+
+	measure 'High Risk Applications' = CALCULATE ([Total Applications],FactApplications[Risk Level] = "High Risk")
+		formatString: 0
+		lineageTag: 31f259c6-fe37-4a4b-b5f4-4fb5e47e9974
+
+	measure 'High Risk Rate' = DIVIDE ([High Risk Applications],[Total Applications],0)
+		formatString: 0%;-0%;0%
+		lineageTag: a73d7156-0bfc-4026-bb31-40eee606e60e
+
+	measure 'Applications per Applicant' = DIVIDE([Total Applications],[Unique Applicants])
+		formatString: 0.0
+		lineageTag: cce97ada-12f5-49c9-8ffd-675a9f3c65dc
+
+	measure 'Average Credit Score' = AVERAGEX(FactApplications,RELATED(DimApplicants[CreditHistory.CreditScore]))
+		formatString: 0.0
+		lineageTag: 1b3c886f-8d1b-4aa8-bddb-01044882f84f
+
+	measure 'Applications Above 100% LTV' = CALCULATE([Total Applications],FactApplications[LTV] > 1)
+		formatString: 0
+		lineageTag: 643d3f9c-fa9e-4980-93ff-35463ecc021a
+
+	measure 'Above 100% LTV Rate' = DIVIDE([Applications Above 100% LTV],[Total Applications])
+		formatString: 0%;-0%;0%
+		lineageTag: 44de0fec-3c15-415b-a711-9117f9147ba7
+
+	measure 'Risk Level' =
+			
+			VAR Score = SELECTEDVALUE(DimApplicants[CreditHistory.CreditScore])
+			RETURN
+			SWITCH(TRUE(),ISBLANK(Score), BLANK(),Score >= 750, "Low Risk",Score >= 680, "Medium Risk","High Risk")
+		lineageTag: 73ffe6dd-0f6e-4324-9d74-1633ca3cd758
+
+	column Column
+		formatString: 0
+		lineageTag: 403bb559-0341-4cf1-9f2d-719ed356fcfd
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Column]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'table Measure' = calculated
+		mode: import
+		source = Row("Column", BLANK())
+
+	annotation PBI_Id = b16c4661866a4ac09d686c3dcb131636
+
+	annotation 436ba87b-9c83-4389-a31b-ebd06a36be98 = {"Expression":""}
+

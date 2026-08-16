@@ -1,0 +1,54 @@
+services:
+  app:
+    build: .
+    ports:
+      - "9010:8010"
+    environment:
+      - VICTORIAMETRICS_URL=http://victoriametrics:8428
+    restart: unless-stopped
+    networks:
+      - divar-net
+
+  victoriametrics:
+    image: docker.arvancloud.ir/victoriametrics/victoria-metrics:v1.97.1
+    ports:
+      - "8428:8428"
+    volumes:
+      - ./victoriametrics/scrape.yml:/etc/vm/scrape.yml
+      - vm_data:/victoria-metrics-data
+    command:
+      - "-storageDataPath=/victoria-metrics-data"
+      - "-promscrape.config=/etc/vm/scrape.yml"
+      - "-retentionPeriod=7d"
+      - "-httpListenAddr=:8428"
+    restart: unless-stopped
+    networks:
+      - divar-net
+
+  grafana:
+    image: docker.arvancloud.ir/grafana/grafana:10.2.3
+    ports:
+      - "8795:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH=/etc/grafana/provisioning/dashboards/divar-dashboard.json
+      - GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_UID=divar-ads-analytics
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - victoriametrics
+      - app
+    restart: unless-stopped
+    networks:
+      - divar-net
+
+volumes:
+  vm_data:
+  grafana_data:
+
+networks:
+  divar-net:
+    driver: bridge

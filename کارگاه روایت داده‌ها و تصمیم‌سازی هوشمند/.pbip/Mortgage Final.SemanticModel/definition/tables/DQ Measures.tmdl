@@ -1,0 +1,108 @@
+table 'DQ Measures'
+	lineageTag: 313a27c2-2d7c-4be3-90e5-c06bb91c288e
+
+	measure 'DQ Total Applications' = COUNTROWS(FactApplications)
+		formatString: 0
+		lineageTag: 9a77329c-5f3b-4735-9c0f-32f17c7a72ee
+
+	measure 'DQ Total Applicants' = COUNTROWS(DimApplicants)
+		formatString: 0
+		lineageTag: f122773e-5632-4670-be12-9669a7dac4f4
+
+	measure 'DQ Total Properties' = COUNTROWS(DimProperties)
+		formatString: 0
+		lineageTag: 61ec5b5f-5dd6-4b42-8de0-df8cf5e613b4
+
+	measure 'DQ Total Products' = COUNTROWS(DimProducts)
+		formatString: 0
+		lineageTag: 7e0235a4-53c5-4d75-bf93-4ba6c43a370e
+
+	measure 'DQ Total Dates' = COUNTROWS(DimDate)
+		formatString: 0
+		lineageTag: 60ac6c95-2d98-4521-b870-5186745a9c05
+
+	measure 'DQ Null Application IDs' = CALCULATE(COUNTROWS(FactApplications),ISBLANK(FactApplications[ApplicationID]))
+		formatString: 0
+		lineageTag: 245245a6-9fd8-4e1a-8a7e-c023bcd8c728
+
+	measure 'DQ Null Applicant IDs in Fact' = CALCULATE(COUNTROWS(FactApplications),ISBLANK(FactApplications[ApplicantID]))
+		formatString: 0
+		lineageTag: 19c9c60e-e0cd-467a-8ce0-b1baf89c5339
+
+	measure 'DQ Null Property IDs in Fact' = CALCULATE(COUNTROWS(FactApplications),ISBLANK(FactApplications[PropertyID]))
+		formatString: 0
+		lineageTag: 91444313-995f-4299-b5c9-cc2b32cc1746
+
+	measure 'DQ Null Product IDs in Fact' = CALCULATE(COUNTROWS(FactApplications),ISBLANK(FactApplications[ProductID]))
+		formatString: 0
+		lineageTag: fac799eb-84e3-441b-8195-b9dca5a117b8
+
+	measure 'DQ Null Applicant IDs in Dim' = CALCULATE(COUNTROWS(DimApplicants),ISBLANK(DimApplicants[ApplicantID]))
+		formatString: 0
+		lineageTag: 48bc65ec-ec83-4107-9df4-7d77030d1da4
+
+	measure 'DQ Null Property IDs in Dim' = CALCULATE(COUNTROWS(DimProperties),ISBLANK(DimProperties[PropertyID]))
+		formatString: 0
+		lineageTag: ade61e89-85cc-4d88-8f20-978859d9cd9a
+
+	measure 'DQ Duplicate Product IDs' =
+			
+			VAR ProductCounts =SUMMARIZE(FILTER(DimProducts,NOT ISBLANK(DimProducts[ProductID])),DimProducts[ProductID],"RowCount", COUNTROWS(DimProducts))
+			RETURN
+			COUNTROWS(FILTER(ProductCounts,[RowCount] > 1))
+		formatString: 0
+		lineageTag: bd3adb83-9766-4d2c-990a-80eefb310790
+
+	measure 'DQ Applicants Without Applications' =
+			
+			VAR ApplicantsInDim =VALUES(DimApplicants[ApplicantID])
+			VAR ApplicantsInFact =VALUES(FactApplications[ApplicantID])
+			RETURN
+			COUNTROWS(EXCEPT(ApplicantsInDim,ApplicantsInFact))
+		formatString: 0
+		lineageTag: d7d6a4f2-7dfa-463e-b2bf-5c29857302ec
+
+	measure 'DQ Properties Without Applications' =
+			
+			VAR PropertiesInDim =VALUES(DimProperties[PropertyID])
+			VAR PropertiesInFact =VALUES(FactApplications[PropertyID])
+			RETURN
+			COUNTROWS(EXCEPT(PropertiesInDim,PropertiesInFact))
+		formatString: 0
+		lineageTag: c818ab3b-d228-4446-a562-51a52bb467ce
+
+	measure 'DQ Duplicate Emails' =
+			
+			VAR CleanEmails =FILTER(DimApplicants,NOT ISBLANK(DimApplicants[Email])&& TRIM(DimApplicants[Email]) <> "")
+			VAR EmailCounts =SUMMARIZE(CleanEmails,DimApplicants[Email],"RowCount", COUNTROWS(DimApplicants))
+			RETURN
+			COUNTROWS(FILTER(EmailCounts,[RowCount] > 1))
+		formatString: 0
+		lineageTag: 1c2cb2b1-c567-43ee-a94f-401d8884b771
+
+	measure 'DQ Duplicate Application IDs' =
+			
+			VAR ApplicationCounts =SUMMARIZE(FILTER(FactApplications,NOT ISBLANK(FactApplications[ApplicationID])),
+			FactApplications[ApplicationID],"RowCount", COUNTROWS(FactApplications))
+			RETURN
+			COUNTROWS(FILTER(ApplicationCounts,[RowCount] > 1))
+		formatString: 0
+		lineageTag: c703277d-ef06-4d84-8482-d15f6f216a2e
+
+	column Column
+		formatString: 0
+		lineageTag: ff9581eb-f6ef-47c6-adef-4c9528e723f3
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Column]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'DQ Measures' = calculated
+		mode: import
+		source = Row("Column", BLANK())
+
+	annotation PBI_Id = dfdfa44e830944f4956f2b1614381da5
+
+	annotation 436ba87b-9c83-4389-a31b-ebd06a36be98 = {"Expression":""}
+

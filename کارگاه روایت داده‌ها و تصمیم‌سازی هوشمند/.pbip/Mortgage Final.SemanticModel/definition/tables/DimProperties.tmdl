@@ -1,0 +1,88 @@
+table DimProperties
+	lineageTag: 3aebefaa-650a-4e84-8178-0207785560e1
+
+	column PropertyID
+		dataType: int64
+		formatString: 0
+		lineageTag: cdc266c3-37dd-4387-8163-66110a47e479
+		summarizeBy: none
+		sourceColumn: PropertyID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Address
+		dataType: string
+		lineageTag: d059076e-8d7d-4f76-bddf-6fbc3812bc49
+		summarizeBy: none
+		sourceColumn: Address
+
+		annotation SummarizationSetBy = Automatic
+
+	column City
+		dataType: string
+		lineageTag: dfcdab91-78c6-47db-84f4-ee4af25daf42
+		summarizeBy: none
+		sourceColumn: City
+
+		annotation SummarizationSetBy = Automatic
+
+	column State
+		dataType: string
+		lineageTag: ed3ef5a8-1fc7-4c95-9b68-377ae41fe639
+		summarizeBy: none
+		sourceColumn: State
+
+		annotation SummarizationSetBy = Automatic
+
+	column ZipCode
+		dataType: string
+		lineageTag: f6df0c37-a783-4af8-a19c-05106453c17f
+		summarizeBy: none
+		sourceColumn: ZipCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column AppraisedValue
+		dataType: double
+		lineageTag: fbafc36f-3856-40fa-8890-12ae10b5f820
+		summarizeBy: none
+		sourceColumn: AppraisedValue
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column StateFullName
+		dataType: string
+		lineageTag: c00dec04-4dab-4790-9cb9-f559fbaf66fd
+		summarizeBy: none
+		sourceColumn: StateFullName
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimProperties = m
+		mode: import
+		source =
+				let
+				  Source = Excel.Workbook(File.Contents("C:\Users\Abbas\Desktop\انجام پروژه\هفته 5\تسک دوم\7534502097409023744_8368102520896\sources\Properties.xlsx"), null, true),
+				  #"Navigation 1" = Source{[Item = "Sheet1", Kind = "Sheet"]}[Data],
+				  #"Promoted headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars = true]),
+				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers",{{"PropertyID", Int64.Type}, {"Address", type text}, {"City", type text}, {"State", type text}, {"ZipCode", type text}, {"AppraisedValue", type number}}),
+				    #"Trimmed Text" = Table.TransformColumns(#"Changed column type",{{"Address", Text.Trim, type text}}),
+				    #"Cleaned Text" = Table.TransformColumns(#"Trimmed Text",{{"Address", Text.Clean, type text}}),
+				    #"Trimmed Text1" = Table.TransformColumns(#"Cleaned Text",{{"City", Text.Trim, type text}}),
+				    #"Cleaned Text1" = Table.TransformColumns(#"Trimmed Text1",{{"City", Text.Clean, type text}}),
+				    #"Trimmed Text2" = Table.TransformColumns(#"Cleaned Text1",{{"State", Text.Trim, type text}}),
+				    #"Cleaned Text2" = Table.TransformColumns(#"Trimmed Text2",{{"State", Text.Clean, type text}}),
+				    #"Trimmed Text3" = Table.TransformColumns(#"Cleaned Text2",{{"ZipCode", Text.Trim, type text}}),
+				    #"Cleaned Text3" = Table.TransformColumns(#"Trimmed Text3",{{"ZipCode", Text.Clean, type text}}),
+				    #"Merged Queries" = Table.FuzzyNestedJoin(#"Cleaned Text3", {"State"}, statefullName, {"State"}, "statefullName", JoinKind.LeftOuter, [IgnoreCase=true, IgnoreSpace=true]),
+				    #"Expanded statefullName" = Table.ExpandTableColumn(#"Merged Queries", "statefullName", {"StateFullName"}, {"statefullName.StateFullName"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Expanded statefullName",{{"statefullName.StateFullName", "StateFullName"}})
+				in
+				    #"Renamed Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

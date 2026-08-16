@@ -1,0 +1,57 @@
+table DimProducts
+	lineageTag: f870bebf-73e0-4a1c-b5ff-9b209ccb2edb
+
+	column ProductID
+		dataType: int64
+		formatString: 0
+		lineageTag: 83c10bdf-9bb8-4986-8748-62565e08ba02
+		summarizeBy: none
+		sourceColumn: ProductID
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductName
+		dataType: string
+		lineageTag: 3a52d685-210c-49fb-a519-4bf1d6eb5bf5
+		summarizeBy: none
+		sourceColumn: ProductName
+
+		annotation SummarizationSetBy = Automatic
+
+	column InterestRate
+		dataType: double
+		lineageTag: 81c98803-552e-4202-b2e9-c5ddeab34854
+		summarizeBy: none
+		sourceColumn: InterestRate
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column TermMonths
+		dataType: int64
+		formatString: 0
+		lineageTag: 36c0b6fc-34e3-48b8-b4e2-0ff2691077a0
+		summarizeBy: none
+		sourceColumn: TermMonths
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimProducts = m
+		mode: import
+		source =
+				let
+				  Source = Excel.Workbook(File.Contents("C:\Users\Abbas\Desktop\انجام پروژه\هفته 5\تسک دوم\7534502097409023744_8368102520896\sources\LoanProducts.xlsx"), null, true),
+				  #"Navigation 1" = Source{[Item = "Sheet1", Kind = "Sheet"]}[Data],
+				  #"Promoted headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars = true]),
+				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"ProductID", Int64.Type}, {"ProductName", type text}, {"InterestRate", type number}, {"TermMonths", Int64.Type}}),
+				    #"Trimmed Text" = Table.TransformColumns(#"Changed column type",{{"ProductName", Text.Trim, type text}}),
+				    #"Cleaned Text" = Table.TransformColumns(#"Trimmed Text",{{"ProductName", Text.Clean, type text}}),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Cleaned Text",{{"InterestRate", Percentage.Type}})
+				in
+				  #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

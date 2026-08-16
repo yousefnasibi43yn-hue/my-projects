@@ -1,0 +1,26 @@
+expression CreditHistory =
+		let
+		  Source = Excel.Workbook(File.Contents("C:\Users\Abbas\Desktop\انجام پروژه\هفته 5\تسک دوم\7534502097409023744_8368102520896\sources\CreditHistory.xlsx"), null, true),
+		  #"Navigation 1" = Source{[Item = "Sheet1", Kind = "Sheet"]}[Data],
+		  #"Promoted headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars = true]),
+		  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"CreditID", Int64.Type}, {"ApplicantID", Int64.Type}, {"CreditScore", Int64.Type}, {"Bankruptcy", Int64.Type}, {"LatePayments", Int64.Type}}),
+		    #"Filtered Rows" = Table.SelectRows(#"Changed column type", each true)
+		in
+		  #"Filtered Rows"
+	lineageTag: e8d7d0f0-24c6-4cd3-b57c-13f71a1807d4
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression statefullName =
+		let
+		  Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("Nc/LCoMwEAXQX5Gs+xOSUpBWLUXoQ7qYamoGYwaS9Pn1zRi7zOHm5qZtRXMSK9GoN3hxXbUiv8Rj7vBLFmYoqgiF7REWkHkECQbv5Cwm27PtlbX+Y57w10pGrcgFnUlwZHBpKDldgvfQ6YdXIaSnN7vIG0MO+5SrtxHq0YCmKcmRbx7Ba7RDIJvaCm7DTuMASeoD33NqWBKy5sUUm6GntOzMy9QrO5MbZ1nz1jX64LALGd2zmH9MN/7J9Qc=", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [State = _t, StateFullName = _t])
+		in
+		  Source
+	lineageTag: d62afb1e-985b-45e2-8c89-8e078cef6456
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,162 @@
+table FactApplications
+	lineageTag: 5db72a1a-a6c9-4a5b-a004-5dca571a8cd4
+
+	column ApplicationID
+		dataType: int64
+		formatString: 0
+		lineageTag: 5f7f0572-2555-4897-a45c-c572290b5cd0
+		summarizeBy: count
+		sourceColumn: ApplicationID
+
+		annotation SummarizationSetBy = Automatic
+
+	column ApplicantID
+		dataType: int64
+		formatString: 0
+		lineageTag: fb247b36-e590-49f3-8035-a0a1eac736fd
+		summarizeBy: none
+		sourceColumn: ApplicantID
+
+		annotation SummarizationSetBy = Automatic
+
+	column PropertyID
+		dataType: int64
+		formatString: 0
+		lineageTag: 138ae6f3-03a8-4ee2-ba08-291241004fb4
+		summarizeBy: none
+		sourceColumn: PropertyID
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductID
+		dataType: int64
+		formatString: 0
+		lineageTag: 2c8cefd1-13f9-4c03-81ec-17a219a4328e
+		summarizeBy: none
+		sourceColumn: ProductID
+
+		annotation SummarizationSetBy = Automatic
+
+	column UnderwriterID
+		dataType: int64
+		formatString: 0
+		lineageTag: d24e3896-f185-4759-8a83-13ed00718b6e
+		summarizeBy: none
+		sourceColumn: UnderwriterID
+
+		annotation SummarizationSetBy = Automatic
+
+	column ApplicationDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: b67fadc1-2d7b-4b17-9897-076119ab18db
+		summarizeBy: none
+		sourceColumn: ApplicationDate
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column LoanAmount
+		dataType: double
+		lineageTag: a9b7e755-d321-4c1f-994b-1247034f5b27
+		summarizeBy: sum
+		sourceColumn: LoanAmount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Status
+		dataType: string
+		lineageTag: de5e360a-c0f4-45d5-a902-91f5957aaaef
+		summarizeBy: none
+		sourceColumn: Status
+
+		annotation SummarizationSetBy = Automatic
+
+	column LTV = ```
+			
+			DIVIDE (
+			    FactApplications[LoanAmount],
+			    RELATED ( DimProperties[AppraisedValue] )
+			)
+			
+			```
+		formatString: 0%;-0%;0%
+		lineageTag: f21757c8-7cb4-437f-a721-22e8dceb0342
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'LTV Band' = ```
+			
+			SWITCH (
+			    TRUE (),
+			    FactApplications[LTV] <= 0.80, "Low",
+			    FactApplications[LTV] <= 1.00, "Medium",
+			    "High"
+			)
+			
+			```
+		lineageTag: 89156e17-9e36-49ab-850b-5cfc95d3ca26
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Risk Level' = ```
+			
+			VAR Score =RELATED ( DimApplicants[CreditHistory.CreditScore] )
+			VAR HasBankruptcy =RELATED ( DimApplicants[CreditHistory.Bankruptcy] )
+			VAR LatePaymentCount =RELATED ( DimApplicants[CreditHistory.LatePayments] )
+			VAR LoanToValue =FactApplications[LTV]
+			VAR HighRisk =(( Score ) && Score < 600 ) || HasBankruptcy = 1 || LatePaymentCount >= 4 || LoanToValue > 1.00
+			VAR MediumRisk =(( Score ) && Score < 700 ) || LatePaymentCount >= 2 || LoanToValue > 0.80
+			RETURN
+			SWITCH (TRUE (),HighRisk, "High Risk",MediumRisk, "Medium Risk","Low Risk")
+			
+			
+			```
+		lineageTag: 2b063d4e-4248-403c-ad03-d8795bb7c487
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Credit Band Display' = ```
+			
+			VAR Score =
+			    RELATED ( DimApplicants[CreditHistory.CreditScore] )
+			RETURN
+			    SWITCH (
+			        TRUE (),
+			        ISBLANK ( Score ), "No Score",
+			        Score < 600, "Poor",
+			        Score < 650, "Fair",
+			        Score < 700, "Good",
+			        Score < 750, "Very Good",
+			        "Excellent"
+			    )
+			
+			```
+		lineageTag: 57528214-95a5-44f8-8094-368c580e01f6
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FactApplications = m
+		mode: import
+		source =
+				let
+				  Source = Excel.Workbook(File.Contents("C:\Users\Abbas\Desktop\انجام پروژه\هفته 5\تسک دوم\7534502097409023744_8368102520896\sources\Applications.xlsx"), null, true),
+				  #"Navigation 1" = Source{[Item = "Sheet1", Kind = "Sheet"]}[Data],
+				  #"Promoted headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars = true]),
+				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"ApplicationID", Int64.Type}, {"ApplicantID", Int64.Type}, {"PropertyID", Int64.Type}, {"ProductID", Int64.Type}, {"UnderwriterID", Int64.Type}, {"ApplicationDate", type date}, {"LoanAmount", type number}, {"Status", type text}}),
+				    #"Trimmed Text" = Table.TransformColumns(#"Changed column type",{{"Status", Text.Trim, type text}}),
+				    #"Cleaned Text" = Table.TransformColumns(#"Trimmed Text",{{"Status", Text.Clean, type text}})
+				in
+				  #"Cleaned Text"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

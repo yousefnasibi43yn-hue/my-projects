@@ -1,0 +1,27 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["DimApplicants","FactApplications","CreditHistory","DimProducts","DimProperties","DimUnderwriters","statefullName"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table DimApplicants
+ref table DateTableTemplate_816ef9e0-eb03-4c4c-ae85-96d57dc87825
+ref table LocalDateTable_40f6f1b5-80b2-4713-ab1c-87ece6f1c12c
+ref table FactApplications
+ref table DimProducts
+ref table DimProperties
+ref table DimUnderwriters
+ref table DimDate
+ref table 'table Measure'
+ref table 'DQ Measures'
+
+ref cultureInfo en-US
+

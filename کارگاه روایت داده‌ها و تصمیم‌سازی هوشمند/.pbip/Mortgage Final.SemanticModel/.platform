@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "Mortgage Final"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "f8635d15-2f27-46ee-915d-e4fbb83f8f73"
+  }
+}

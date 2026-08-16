@@ -1,0 +1,1035 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmark/2.1.0/schema.json",
+  "displayName": "Reset Risk Analysis",
+  "name": "2502b705c0659b647264",
+  "options": {
+    "targetVisualNames": []
+  },
+  "explorationState": {
+    "version": "1.3",
+    "activeSection": "02bc72198c39ef81c131",
+    "sections": {
+      "02bc72198c39ef81c131": {
+        "visualContainers": {
+          "1d5d64a5e2da7a7e678f": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "4465ca9b872ac79acf6d",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "FactApplications"
+                        }
+                      },
+                      "Property": "Status"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "d69c4d6da8b4ed3a0f25",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "FactApplications"
+                        }
+                      },
+                      "Property": "Credit Band Display"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "263c8a147674cedf0df2",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "table Measure"
+                        }
+                      },
+                      "Property": "Total Applications"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "pivotTable",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "table Measure"
+                        }
+                      },
+                      "Property": "Total Applications"
+                    }
+                  }
+                }
+              ],
+              "activeProjections": {
+                "Columns": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "FactApplications"
+                        }
+                      },
+                      "Property": "Status"
+                    }
+                  }
+                ],
+                "Rows": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "FactApplications"
+                        }
+                      },
+                      "Property": "Credit Band Display"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "333d3cbe6f9fcb60e16d": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "e84019ab75a88009606f",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DimApplicants"
+                        }
+                      },
+                      "Property": "CreditHistory.Bankruptcy"
+                    }
+                  },
+                  "howCreated": 1
+                },
+                {
+                  "name": "08d5c3b1d9e91ecd0a14",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DimApplicants"
+                        }
+                      },
+                      "Property": "Bankruptcy Label"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "slicer",
+              "objects": {
+                "merge": {
+                  "data": [
+                    {
+                      "properties": {
+                        "mode": {
+                          "expr": {
+                            "Literal": {
+                              "Value": "'Dropdown'"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "activeProjections": {
+                "Values": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DimApplicants"
+                        }
+                      },
+                      "Property": "Bankruptcy Label"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "4574d4f1826d88c1d5f0": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "78f308929d23a9ec5e32",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "table Measure"
+                        }
+                      },
+                      "Property": "Average Credit Score"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "cardVisual",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "table Measure"
+                        }
+                      },
+                      "Property": "Average Credit Score"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "4fd19aef295467c937db": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "93da62daa2f413308d1c",
+                  "type": "Advanced",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DimApplicants"
+                        }
+                      },
+                      "Property": "CreditHistory.LatePayments"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "7575bb61866ed183366a",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "table Measure"
+                        }
+                      },
+                      "Property": "Total Applications"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "clusteredColumnChart",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "table Measure"
+                        }
+                      },
+                      "Property": "Total Applications"
+                    }
+                  }
+                }
+              ],
+              "activeProjections": {
+                "Category": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DimApplicants"
+                        }
+                      },
+                      "Property": "CreditHistory.LatePayments"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "529688c75da367f438d9": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "e7fc0951c59653fc25f2",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "FactApplications"
+                        }
+                      },
+                      "Property": "Status"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "86f6f8758e8d5db710b7",
+                  "type": "Advanced",
+                  "expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "FactApplications"
+                            }
+                          },
+                          "Property": "LoanAmount"
+                        }
+                      },
+                      "Function": 0
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "b320ed4e3f689bab9bf4",
+                  "type": "Advanced",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DimApplicants"
+                        }
+                      },
+                      "Property": "CreditHistory.CreditScore"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "26ec3044bb4cebb64836",
+                  "type": "Advanced",
+                  "expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "FactApplications"
+                            }
+                          },
+                          "Property": "LTV"
+                        }
+                      },
+                      "Function": 0
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "scatterChart",
+              "objects": {},
+              "activeProjections": {
+                "X": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DimApplicants"
+                        }
+                      },
+                      "Property": "CreditHistory.CreditScore"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "5cd56e80c0f1f6a3e1af": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "35e71202f5025763732f",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "table Measure"
+                        }
+                      },
+                      "Property": "High Risk Applications"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "cardVisual",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "table Measure"
+                        }
+                      },
+                      "Property": "High Risk Applications"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "7aa5fbe70275ec8823c6": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "208c2ee835e8bf1c6ece",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DimApplicants"
+                        }
+                      },
+                      "Property": "Bankruptcy Label"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "a65a27d0cd1253f51d38",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "FactApplications"
+                        }
+                      },
+                      "Property": "Status"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "a3be0f36ea86f31150e5",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "table Measure"
+                        }
+                      },
+                      "Property": "Total Applications"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "columnChart",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "table Measure"
+                        }
+                      },
+                      "Property": "Total Applications"
+                    }
+                  }
+                }
+              ],
+              "activeProjections": {
+                "Category": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DimApplicants"
+                        }
+                      },
+                      "Property": "Bankruptcy Label"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "8999604b51427b4ffff1": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "cbdc759a0701b245e951",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "table Measure"
+                        }
+                      },
+                      "Property": "Applications Above 100% LTV"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "cardVisual",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "table Measure"
+                        }
+                      },
+                      "Property": "Applications Above 100% LTV"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "905e00de0cb1f0d84f8a": {
+            "singleVisual": {
+              "visualType": "textbox",
+              "objects": {}
+            }
+          },
+          "a7af600b3ebafc3408c4": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "a3b10cc9beef7fea028c",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "FactApplications"
+                        }
+                      },
+                      "Property": "Credit Band Display"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "02ec1abad957910c695e",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "FactApplications"
+                        }
+                      },
+                      "Property": "Status"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "4bfa7fd220f3d8e86dc4",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "table Measure"
+                        }
+                      },
+                      "Property": "Total Applications"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "columnChart",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "table Measure"
+                        }
+                      },
+                      "Property": "Total Applications"
+                    }
+                  }
+                }
+              ],
+              "activeProjections": {
+                "Category": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "FactApplications"
+                        }
+                      },
+                      "Property": "Credit Band Display"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "ac81d271cdf817e9c429": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "2185d3f32e0b12022d10",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "FactApplications"
+                        }
+                      },
+                      "Property": "Risk Level"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "slicer",
+              "objects": {
+                "merge": {
+                  "data": [
+                    {
+                      "properties": {
+                        "mode": {
+                          "expr": {
+                            "Literal": {
+                              "Value": "'Dropdown'"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "activeProjections": {
+                "Values": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "FactApplications"
+                        }
+                      },
+                      "Property": "Risk Level"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "bd85c4c91dc6abc6466e": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "8345cb1ea596bad630c6",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "table Measure"
+                        }
+                      },
+                      "Property": "High Risk Rate"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "cardVisual",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "table Measure"
+                        }
+                      },
+                      "Property": "High Risk Rate"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "d55d486d19b5a19312e0": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "0d19dbf01c6f8acb9e88",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "FactApplications"
+                        }
+                      },
+                      "Property": "Credit Band Display"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "slicer",
+              "objects": {
+                "merge": {
+                  "data": [
+                    {
+                      "properties": {
+                        "mode": {
+                          "expr": {
+                            "Literal": {
+                              "Value": "'Dropdown'"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ],
+                  "selection": [
+                    {
+                      "properties": {
+                        "strictSingleSelect": {
+                          "expr": {
+                            "Literal": {
+                              "Value": "false"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "activeProjections": {
+                "Values": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "FactApplications"
+                        }
+                      },
+                      "Property": "Credit Band Display"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "dc20efa3b1ef8e4eb74e": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "00dac5be889a9fe026cb",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DimProducts"
+                        }
+                      },
+                      "Property": "ProductName"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "fb19c3ae2a1f63ee7baa",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "FactApplications"
+                        }
+                      },
+                      "Property": "Risk Level"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "20f04b7c2c3f3107beab",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "table Measure"
+                        }
+                      },
+                      "Property": "Total Applications"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "columnChart",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "table Measure"
+                        }
+                      },
+                      "Property": "Total Applications"
+                    }
+                  }
+                }
+              ],
+              "activeProjections": {
+                "Category": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DimProducts"
+                        }
+                      },
+                      "Property": "ProductName"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "dc88f9abefef6b696f8e": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "164ab1a93a55df15c285",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "FactApplications"
+                        }
+                      },
+                      "Property": "Risk Level"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "f012b3950a8f8b809bd9",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "table Measure"
+                        }
+                      },
+                      "Property": "Total Applications"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "clusteredColumnChart",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "table Measure"
+                        }
+                      },
+                      "Property": "Total Applications"
+                    }
+                  }
+                }
+              ],
+              "activeProjections": {
+                "Category": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "FactApplications"
+                        }
+                      },
+                      "Property": "Risk Level"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "e0ed3711f88257e03cf8": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "a89db0b61ffe399f3d0a",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DimProducts"
+                        }
+                      },
+                      "Property": "ProductName"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "slicer",
+              "objects": {
+                "merge": {
+                  "data": [
+                    {
+                      "properties": {
+                        "mode": {
+                          "expr": {
+                            "Literal": {
+                              "Value": "'Dropdown'"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "activeProjections": {
+                "Values": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DimProducts"
+                        }
+                      },
+                      "Property": "ProductName"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "f8d0345d8c7849bfa2cd": {
+            "singleVisual": {
+              "visualType": "shape",
+              "objects": {}
+            }
+          }
+        }
+      }
+    },
+    "objects": {
+      "merge": {
+        "outspacePane": [
+          {
+            "properties": {
+              "expanded": {
+                "expr": {
+                  "Literal": {
+                    "Value": "false"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

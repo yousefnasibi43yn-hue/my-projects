@@ -1,0 +1,77 @@
+table DimDate
+	lineageTag: 1806b0fa-edf5-4cde-954e-ab0af424d5ad
+	dataCategory: Time
+
+	column Date
+		isKey
+		formatString: General Date
+		lineageTag: bcadd765-89ce-4ee9-8587-629c135c4bf6
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year
+		formatString: 0
+		lineageTag: 574e008f-73b7-4266-83a6-3850960af787
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Year]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quarter
+		lineageTag: a7a19408-448a-4ead-b146-0d8e8333e358
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Quarter]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Number'
+		formatString: 0
+		lineageTag: 6456669e-8bf2-4458-a018-7c35ddac3be2
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Month Number]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year-Month
+		lineageTag: f7ea2db7-f38a-4d2c-ad39-c01a82787410
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Year-Month]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Name'
+		lineageTag: 5be36425-7cf4-404f-b59e-8e3ae4af731a
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month Name]
+		sortByColumn: 'Month Number'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimDate = calculated
+		mode: import
+		source = ```
+				
+				ADDCOLUMNS (
+				    CALENDAR (
+				        MIN ( FactApplications[ApplicationDate] ),
+				        MAX ( FactApplications[ApplicationDate] )
+				    ),
+				    "Year", YEAR ( [Date] ),
+				    "Quarter", "Q" & QUARTER ( [Date] ),
+				    "Month Name", FORMAT ( [Date], "MMMM" ),
+				    "Month Number", MONTH ( [Date] ),
+				    "Year-Month", FORMAT ( [Date], "YYYY-MM" )
+				)
+				
+				```
+
+	annotation PBI_Id = 6e2b622cf90c4ac8b0876834425d68e9
+
